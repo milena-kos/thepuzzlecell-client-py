@@ -16,8 +16,10 @@ pip install thepuzzlecell
 
 Here is a quick example:
 ```py
+import thepuzzlecell
+
 async def test():
-    connection = await client("wss://tpc.milenakos.repl.co", "2.0", "Hello World Client")
+    connection = await thepuzzlecell.client("wss://tpc.milenakos.repl.co", "2.0", "Hello World Client")
     
     await connection.send_packet("Hello")
     await connection.send_packet("World!")

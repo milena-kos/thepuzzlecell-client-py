@@ -1,4 +1,8 @@
-import asyncio, websockets, threading
+try:
+    import asyncio
+except SyntaxError:
+    print("You are using broken asyncio.")
+import websockets, threading
 
 async def client(*args):
     # interface cus you cant make async __init__
