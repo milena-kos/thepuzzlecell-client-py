@@ -22,7 +22,7 @@ class Client:
     async def connect(self):
         self.webs = await websockets.connect(self.ip)
         await self.webs.send('token {"version":"' + self.version + '","clientID":"' + self.client_id + '"}')
-        thread = threading.Thread(target=self.listen).start()
+        threading.Thread(target=self.listen).start()
 
     def listen(self):
         while not self.closed:
@@ -38,14 +38,14 @@ class Client:
     async def get(self, webs):
         try:
             return await asyncio.wait_for(webs.recv(), 0.1)
-        except:
+        except Exception:
             return None
 
     async def send_packet(self, data):
         try:
             await asyncio.wait_for(self.webs.send(data), 1)
-        except:
-            if auto_reconnect:
+        except Exception:
+            if self.auto_reconnect:
                 await self.connect()
                 await self.webs.send(data)
             else:
@@ -67,7 +67,7 @@ class Client:
                 self.info = []
                 if to_return:
                     return to_return
-        except:
+        except Exception:
             pass
         return []
 
@@ -82,11 +82,11 @@ class Client:
         x, y, id = kwargs["x"], kwargs["y"], kwargs["id"]
         try:
             rot = kwargs["rot"]
-        except:
+        except Exception:
             rot = 0
         try:
             heat = kwargs["heat"]
-        except:
+        except Exception:
             heat = 0
         await self.send_packet(f"place {x} {y} {id} {rot} {heat}")
 
@@ -96,7 +96,7 @@ class Client:
         x, y = kwargs["x"], kwargs["y"]
         try:
             bg = kwargs["bg"]
-        except:
+        except Exception:
             bg = "placeable"
         await self.send_packet(f"bg {x} {y} {bg}")
 
@@ -113,11 +113,11 @@ class Client:
         x, y, id = kwargs["x"], kwargs["y"], kwargs["id"]
         try:
             uuid = kwargs["uuid"]
-        except:
+        except Exception:
             uuid = self.client_id
         try:
             rot = kwargs["rot"]
-        except:
+        except Exception:
             rot = 0
         await self.send_packet(f"new-hover {uuid} {x} {y} {id} {rot}")
 
@@ -126,7 +126,7 @@ class Client:
         x, y = kwargs["x"], kwargs["y"]
         try:
             uuid = kwargs["uuid"]
-        except:
+        except Exception:
             uuid = self.client_id
         await self.send_packet(f"set-hover {uuid} {x} {y}")
 
@@ -134,7 +134,7 @@ class Client:
         # drop-hover <uuid> - Removes the hover
         try:
             uuid = args[0]
-        except:
+        except Exception:
             uuid = self.client_id
         await self.send_packet(f"drop-hover {uuid}")
 
@@ -143,7 +143,7 @@ class Client:
         x, y = kwargs["x"], kwargs["y"]
         try:
             uuid = kwargs["uuid"]
-        except:
+        except Exception:
             uuid = self.client_id
         await self.send_packet(f"set-cursor {uuid} {x} {y}")
 
